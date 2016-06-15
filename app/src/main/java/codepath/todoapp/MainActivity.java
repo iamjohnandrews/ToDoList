@@ -76,4 +76,6 @@ public class MainActivity extends AppCompatActivity {
         etEditText.setText("");
         writeItems();
     }
+
+
 }
