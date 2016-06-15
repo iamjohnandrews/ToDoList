@@ -1,5 +1,6 @@
 package codepath.todoapp;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -38,7 +39,11 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
-
+        lvItems.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                navigateToEditActivity(position);
+            }
+        });
     }
 
     public void populateArrayItems() {
@@ -71,11 +76,16 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void OnAddItem(View view) {
+    public void onAddItem(View view) {
         aToDoAdapter.add(etEditText.getText().toString());
         etEditText.setText("");
         writeItems();
     }
 
+    public void navigateToEditActivity(int index) {
+        Intent transitionToEdit = new Intent(MainActivity.this, EditItemActivity.class);
+        transitionToEdit.putExtra("selectedItem",todoItems.get(index));
+        startActivity(transitionToEdit);
+    }
 
 }
