@@ -21,6 +21,8 @@ public class MainActivity extends AppCompatActivity {
     ArrayAdapter<String> aToDoAdapter;
     ListView lvItems;
     EditText etEditText;
+    private final int EDITED_ITEM_REQUEST_CODE = 20;
+    Integer selectedIndexRow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,9 +85,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void navigateToEditActivity(int index) {
+        selectedIndexRow = index;
         Intent transitionToEdit = new Intent(MainActivity.this, EditItemActivity.class);
-        transitionToEdit.putExtra("selectedItem",todoItems.get(index));
-        startActivity(transitionToEdit);
+        transitionToEdit.putExtra("selectedItem",todoItems.get(index).toString());
+        startActivityForResult(transitionToEdit, EDITED_ITEM_REQUEST_CODE);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == EDITED_ITEM_REQUEST_CODE && requestCode == EDITED_ITEM_REQUEST_CODE) {
+            String newItem = data.getExtras().getString("editedText");
+            todoItems.add(selectedIndexRow, newItem);
+        }
+    }
 }
