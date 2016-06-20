@@ -10,12 +10,13 @@ public class EditItemActivity extends AppCompatActivity {
 
     EditText userSelectedEditText;
     String userEditedText;
+    public static final String SELECTED_ITEM = "selectedItem";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_item);
-        String selectedItem = getIntent().getStringExtra("selectedItem");
+        String selectedItem = getIntent().getStringExtra(SELECTED_ITEM);
 
         userSelectedEditText = (EditText) findViewById(R.id.userSelectedEditText);
         userSelectedEditText.setText(selectedItem);

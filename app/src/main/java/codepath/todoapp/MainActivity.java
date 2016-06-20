@@ -22,10 +22,11 @@ public class MainActivity extends AppCompatActivity {
     ListView lvItems;
     EditText etEditText;
     private final int EDITED_ITEM_REQUEST_CODE = 20;
-    Integer selectedIndexRow;
+    int selectedIndexRow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        System.out.println("onCreate called");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         populateArrayItems();
@@ -35,9 +36,10 @@ public class MainActivity extends AppCompatActivity {
         lvItems.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+//                removeItemFromList(i);
                 todoItems.remove(i);
                 aToDoAdapter.notifyDataSetChanged();
-                writeItems();
+//                writeItems();
                 return true;
             }
         });
@@ -53,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
         aToDoAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, todoItems);
     }
 
+    //region Private Methods
     private void readItems() {
         File fileDir = getFilesDir();
         File file = new File(fileDir, "todo.txt");
@@ -78,6 +81,14 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void removeItemFromList(Integer index) {
+        System.out.println("removeItemFromList called for index:" + index);
+        todoItems.remove(index);
+        aToDoAdapter.notifyDataSetChanged();
+        writeItems();
+    }
+    //endregion
+
     public void onAddItem(View view) {
         aToDoAdapter.add(etEditText.getText().toString());
         etEditText.setText("");
@@ -94,9 +105,15 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        System.out.println("onActivityResult called");
         if (requestCode == EDITED_ITEM_REQUEST_CODE && requestCode == EDITED_ITEM_REQUEST_CODE) {
+//            removeItemFromList(selectedIndexRow);
+            todoItems.remove(selectedIndexRow);
+
             String newItem = data.getExtras().getString("editedText");
             todoItems.add(selectedIndexRow, newItem);
+
+            aToDoAdapter.notifyDataSetChanged();
         }
     }
 }
