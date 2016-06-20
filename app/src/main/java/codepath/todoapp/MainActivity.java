@@ -36,10 +36,8 @@ public class MainActivity extends AppCompatActivity {
         lvItems.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-//                removeItemFromList(i);
                 todoItems.remove(i);
-                aToDoAdapter.notifyDataSetChanged();
-//                writeItems();
+                updateListViewAndPersistItems();
                 return true;
             }
         });
@@ -81,9 +79,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void removeItemFromList(Integer index) {
-        System.out.println("removeItemFromList called for index:" + index);
-        todoItems.remove(index);
+    private void updateListViewAndPersistItems() {
         aToDoAdapter.notifyDataSetChanged();
         writeItems();
     }
@@ -98,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
     public void navigateToEditActivity(int index) {
         selectedIndexRow = index;
         Intent transitionToEdit = new Intent(MainActivity.this, EditItemActivity.class);
-        transitionToEdit.putExtra("selectedItem",todoItems.get(index).toString());
+        transitionToEdit.putExtra(EditItemActivity.SELECTED_ITEM,todoItems.get(index).toString());
         startActivityForResult(transitionToEdit, EDITED_ITEM_REQUEST_CODE);
     }
 
@@ -107,13 +103,12 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         System.out.println("onActivityResult called");
         if (requestCode == EDITED_ITEM_REQUEST_CODE && requestCode == EDITED_ITEM_REQUEST_CODE) {
-//            removeItemFromList(selectedIndexRow);
             todoItems.remove(selectedIndexRow);
 
             String newItem = data.getExtras().getString("editedText");
             todoItems.add(selectedIndexRow, newItem);
 
-            aToDoAdapter.notifyDataSetChanged();
+            updateListViewAndPersistItems();
         }
     }
 }
