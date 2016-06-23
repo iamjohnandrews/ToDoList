@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ListView;
 
 import org.apache.commons.io.FileUtils;
@@ -20,7 +19,10 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<String> todoItems;
     ArrayAdapter<String> aToDoAdapter;
     ListView lvItems;
-    EditText etEditText;
+
+    ArrayList<String> todoItemsPriority;
+    ListView lvPriorityLevels;
+    ArrayAdapter<String> priorityAdapter;
     private final int EDITED_ITEM_REQUEST_CODE = 20;
     int selectedIndexRow;
 
@@ -30,13 +32,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         populateArrayItems();
+
+
         lvItems = (ListView) findViewById(R.id.lvItems);
         lvItems.setAdapter(aToDoAdapter);
-        etEditText = (EditText) findViewById(R.id.etEditText);
         lvItems.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
                 todoItems.remove(i);
+                todoItemsPriority.remove(i);
                 updateListViewAndPersistItems();
                 return true;
             }
@@ -85,11 +89,6 @@ public class MainActivity extends AppCompatActivity {
     }
     //endregion
 
-    public void onAddItem(View view) {
-        aToDoAdapter.add(etEditText.getText().toString());
-        etEditText.setText("");
-        writeItems();
-    }
 
     public void navigateToEditActivity(int index) {
         selectedIndexRow = index;
