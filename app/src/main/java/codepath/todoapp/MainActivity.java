@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == EDITED_ITEM_REQUEST_CODE && requestCode == EDITED_ITEM_REQUEST_CODE) {
             todoItems.remove(selectedIndexRow);
 
-            String newItem = data.getExtras().getString("editedText");
+            String newItem = data.getExtras().getString(EditItemActivity.EDITED_TASK_NAME);
             todoItems.add(selectedIndexRow, newItem);
 
             updateListViewAndPersistItems();
