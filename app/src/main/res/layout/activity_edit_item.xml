@@ -15,17 +15,19 @@
         android:id="@+id/userSelectedEditText"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:layout_toEndOf="@+id/taskName"/>
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/btn_save"
-        android:id="@+id/button"
+        android:id="@+id/saveButton"
         android:onClick="saveItem"
         android:layout_alignParentBottom="true"
-        android:layout_alignRight="@+id/userSelectedEditText"
-        android:layout_alignEnd="@+id/userSelectedEditText" />
+        android:layout_alignParentRight="true"
+        android:layout_alignParentLeft="true"
+        />
 
     <EditText
         android:layout_width="wrap_content"
@@ -33,7 +35,8 @@
         android:id="@+id/taskName"
         android:layout_alignBottom="@+id/userSelectedEditText"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:text="@string/taskNameLabel" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -42,6 +45,52 @@
         android:layout_alignLeft="@+id/taskName"
         android:layout_below="@+id/taskName"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:text="@string/dueDateLabel" />
+
+    <DatePicker
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/datePicker"
+        android:layout_below="@+id/userSelectedEditText"
+        android:layout_above="@+id/levels"
+        android:layout_toRightOf="@+id/taskName"
+        android:layout_toEndOf="@+id/taskName" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/priorityLevel"
+        android:layout_centerVertical="true"
+        android:text="@string/priorityLevelLabel"
+        />
+
+    <Spinner
+        android:id="@+id/levels"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/taskName"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/priorityLevel"
+        android:layout_above="@+id/taskNote"
+        android:entries="@array/levels" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/taskNote"
+        android:layout_below="@+id/priorityLevel"
+        android:text="@string/taskNoteLabel" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/toDoDetails"
+        android:layout_toRightOf="@+id/taskNote"
+        android:layout_above="@+id/saveButton"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/taskNote"
+        android:hint="@string/toDoDetails"
+        android:gravity="top"/>
 
 </RelativeLayout>

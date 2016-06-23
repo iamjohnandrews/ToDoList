@@ -3,4 +3,14 @@
     <string name="add">Add</string>
     <string name="add_item">Add new item...</string>
     <string name="btn_save">Save</string>
+    <string name="taskNameLabel">Task Name</string>
+    <string name="dueDateLabel">Due Date</string>
+    <string name="taskNoteLabel">Task Note</string>
+    <string name="priorityLevelLabel">Priority</string>
+    <string name="toDoDetails">Add details here...</string>
+    <string-array name="levels">
+        <item>High</item>
+        <item>Medium</item>
+        <item>Low</item>
+    </string-array>
 </resources>
