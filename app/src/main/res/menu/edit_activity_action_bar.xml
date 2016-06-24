@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="schemas.android.com/tools"
+    tools:context="com.example.sample.EditItemActivity"
+    xmlns:ToDoApp="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_add"
+        android:title="@string/saveLabel"
+        android:orderInCategory="100"
+        ToDoApp:showAsAction="always"
+        />
+
+</menu>

@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
     private final String ITEMS_OBJECT_ARRAY = "persistedItemsArray";
     private final String TASK_NAME = "taskName";
     private final String PRIORITY_LEVEL = "priority";
-    private final int EDITED_ITEM_REQUEST_CODE = 20;
+    public final int EDITED_ITEM_REQUEST_CODE = 20;
     public final int NEW_ITEM_REQUEST_CODE = 10;
 
 
@@ -79,7 +79,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         super.onOptionsItemSelected(item);
-        System.out.println("WTF" + item.getItemId());
         navigateToEditActivity(NEW_ITEM_REQUEST_CODE);
         return true;
     }

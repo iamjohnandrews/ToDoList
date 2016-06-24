@@ -3,6 +3,9 @@ package codepath.todoapp;
 import android.app.DatePickerDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -22,25 +25,36 @@ public class EditItemActivity extends AppCompatActivity {
     DatePicker itemDatePicker;
     Date creationDate;
     Date deadlineDate;
+    int requestCode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_item);
-//        selectedItem = getIntent().getStringExtra(SELECTED_ITEM);
         selectedItem = (Item) getIntent().getSerializableExtra(SELECTED_ITEM);
 
         if (selectedItem == null) {
             setCurrentDateOnView();
+            requestCode = 10;
         } else {
-            userSelectedEditText = (EditText) findViewById(R.id.userSelectedEditText);
-            userSelectedEditText.setText(selectedItem.taskName);
-            todoDetails = (EditText) findViewById(R.id.toDoDetails);
-            todoDetails.setText(selectedItem.taskNote);
-            priorityLevels = (Spinner) findViewById(R.id.levels);
-            priorityLevels.setPrompt(selectedItem.priorityLevel);
-            itemDatePicker = (DatePicker) findViewById(R.id.datePicker);
+            requestCode = 20;
+            captureDataFromViews();
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.edit_activity_action_bar, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        super.onOptionsItemSelected(item);
+        saveItem();
+        return true;
     }
 
     private void setCurrentDateOnView() {
@@ -55,29 +69,40 @@ public class EditItemActivity extends AppCompatActivity {
     }
 
     private DatePickerDialog.OnDateSetListener datePickerListener = new DatePickerDialog.OnDateSetListener() {
-
-        // when dialog box is closed, below method will be called.
         public void onDateSet(DatePicker view, int selectedYear, int selectedMonth, int selectedDay) {
             deadlineDate = new Date();
             deadlineDate.year = selectedYear;
             deadlineDate.month = selectedMonth;
             deadlineDate.day = selectedDay;
-
-            // set selected date into datepicker also
-//            dpResult.init(year, month, day, null);
-
         }
     };
 
-    public void saveItem(View view) {
-        selectedItem = new Item(userSelectedEditText.getText().toString(), deadlineDate, todoDetails.getText().toString(), String.valueOf(priorityLevels.getSelectedItem()), creationDate);
-        saveEditedTextForMainActivity();
+    private void captureDataFromViews() {
+        userSelectedEditText = (EditText) findViewById(R.id.userSelectedEditText);
+        todoDetails = (EditText) findViewById(R.id.toDoDetails);
+        priorityLevels = (Spinner) findViewById(R.id.levels);
+        itemDatePicker = (DatePicker) findViewById(R.id.datePicker);
+
+        if (requestCode == 20) {
+            setTextForViews();
+        }
     }
 
-    private void saveEditedTextForMainActivity() {
+    private void setTextForViews() {
+        userSelectedEditText.setText(selectedItem.taskName);
+        todoDetails.setText(selectedItem.taskNote);
+        priorityLevels.setPrompt(selectedItem.priorityLevel);
+    }
+
+    public void saveItem() {
+        selectedItem = new Item(userSelectedEditText.getText().toString(), deadlineDate, todoDetails.getText().toString(), String.valueOf(priorityLevels.getSelectedItem()), creationDate);
+        saveItemForMainActivity(requestCode);
+    }
+
+    private void saveItemForMainActivity(int index) {
         Intent userUpdatedTask = new Intent();
         userUpdatedTask.putExtra(SELECTED_ITEM, selectedItem);
-        setResult(20, userUpdatedTask);
+        setResult(index, userUpdatedTask);
         finish();
     }
 }

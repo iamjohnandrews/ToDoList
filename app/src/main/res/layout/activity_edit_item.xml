@@ -18,17 +18,6 @@
         android:layout_alignParentEnd="true"
         android:layout_toEndOf="@+id/taskName"/>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/btn_save"
-        android:id="@+id/saveButton"
-        android:onClick="saveItem"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentLeft="true"
-        />
-
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -60,7 +49,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/priorityLevel"
-        android:layout_centerVertical="true"
+        android:layout_above="@+id/taskNote"
         android:text="@string/priorityLevelLabel"
         />
 
@@ -78,7 +67,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/taskNote"
-        android:layout_below="@+id/priorityLevel"
+        android:layout_alignParentBottom="true"
         android:text="@string/taskNoteLabel" />
 
     <EditText
@@ -86,7 +75,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/toDoDetails"
         android:layout_toRightOf="@+id/taskNote"
-        android:layout_above="@+id/saveButton"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_alignTop="@+id/taskNote"
         android:hint="@string/toDoDetails"
