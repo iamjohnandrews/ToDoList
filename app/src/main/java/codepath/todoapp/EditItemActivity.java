@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.content.Intent;
@@ -99,7 +100,9 @@ public class EditItemActivity extends AppCompatActivity {
     private void setTextForViews() {
         userSelectedEditText.setText(selectedItem.taskName);
         todoDetails.setText(selectedItem.taskNote);
-        priorityLevels.setPrompt(selectedItem.priorityLevel);
+        ArrayAdapter<String> arraySpinner = (ArrayAdapter<String>) priorityLevels.getAdapter();
+        priorityLevels.setSelection(arraySpinner.getPosition(selectedItem.priorityLevel));
+
         itemDatePicker.init(selectedItem.dueDate.year, selectedItem.dueDate.month, selectedItem.dueDate.day, new DatePicker.OnDateChangedListener() {
             @Override
             public void onDateChanged(DatePicker datePicker, int i, int i1, int i2) {
