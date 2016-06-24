@@ -38,8 +38,9 @@ public class MainActivity extends AppCompatActivity {
     private final String ITEMS_OBJECT_ARRAY = "persistedItemsArray";
     private final String TASK_NAME = "taskName";
     private final String PRIORITY_LEVEL = "priority";
-    public final int EDITED_ITEM_REQUEST_CODE = 20;
-    public final int NEW_ITEM_REQUEST_CODE = 10;
+    private final int EDITED_ITEM_REQUEST_CODE = 20;
+    private final int NEW_ITEM_REQUEST_CODE = 10;
+
 
 
     @Override
@@ -162,17 +163,18 @@ public class MainActivity extends AppCompatActivity {
         Intent transitionToEdit = new Intent(MainActivity.this, EditItemActivity.class);
 
         if (index == EDITED_ITEM_REQUEST_CODE) {
-            transitionToEdit.putExtra(EditItemActivity.SELECTED_ITEM, todoItems.get(index).toString());
+            transitionToEdit.putExtra("Item", todoItems.get(selectedIndexRow));
         }
-        startActivityForResult(transitionToEdit, index);
+        startActivity(transitionToEdit);
+//        startActivityForResult(transitionToEdit, index);
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == EDITED_ITEM_REQUEST_CODE) {
             todoItems.remove(selectedIndexRow);
-
             Item newItem = (Item) data.getExtras().getSerializable(EditItemActivity.SELECTED_ITEM);
             todoItems.add(selectedIndexRow, newItem);
 

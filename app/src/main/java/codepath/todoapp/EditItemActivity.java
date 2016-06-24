@@ -21,6 +21,8 @@ public class EditItemActivity extends AppCompatActivity {
     EditText todoDetails;
     Spinner priorityLevels;
     public static final String SELECTED_ITEM = "selectedItem";
+    private final int EDITED_ITEM_REQUEST_CODE = 20;
+    private final int NEW_ITEM_REQUEST_CODE = 10;
     Item selectedItem;
     DatePicker itemDatePicker;
     Date creationDate;
@@ -35,9 +37,9 @@ public class EditItemActivity extends AppCompatActivity {
 
         if (selectedItem == null) {
             setCurrentDateOnView();
-            requestCode = 10;
+            requestCode = NEW_ITEM_REQUEST_CODE;
         } else {
-            requestCode = 20;
+            requestCode = EDITED_ITEM_REQUEST_CODE;
             captureDataFromViews();
         }
     }
@@ -65,17 +67,16 @@ public class EditItemActivity extends AppCompatActivity {
         creationDate.day = today.get(Calendar.DAY_OF_MONTH);
 
         itemDatePicker = (DatePicker) findViewById(R.id.datePicker);
-        itemDatePicker.init(creationDate.year, creationDate.month, creationDate.day, null);
+        itemDatePicker.init(creationDate.year, creationDate.month, creationDate.day, new DatePicker.OnDateChangedListener() {
+            @Override
+            public void onDateChanged(DatePicker datePicker, int i, int i1, int i2) {
+                deadlineDate = new Date();
+                deadlineDate.year = i;
+                deadlineDate.month = i1;
+                deadlineDate.day = i2;
+            }
+        });
     }
-
-    private DatePickerDialog.OnDateSetListener datePickerListener = new DatePickerDialog.OnDateSetListener() {
-        public void onDateSet(DatePicker view, int selectedYear, int selectedMonth, int selectedDay) {
-            deadlineDate = new Date();
-            deadlineDate.year = selectedYear;
-            deadlineDate.month = selectedMonth;
-            deadlineDate.day = selectedDay;
-        }
-    };
 
     private void captureDataFromViews() {
         userSelectedEditText = (EditText) findViewById(R.id.userSelectedEditText);
@@ -83,7 +84,7 @@ public class EditItemActivity extends AppCompatActivity {
         priorityLevels = (Spinner) findViewById(R.id.levels);
         itemDatePicker = (DatePicker) findViewById(R.id.datePicker);
 
-        if (requestCode == 20) {
+        if (requestCode == EDITED_ITEM_REQUEST_CODE) {
             setTextForViews();
         }
     }
@@ -92,15 +93,26 @@ public class EditItemActivity extends AppCompatActivity {
         userSelectedEditText.setText(selectedItem.taskName);
         todoDetails.setText(selectedItem.taskNote);
         priorityLevels.setPrompt(selectedItem.priorityLevel);
+        itemDatePicker.init(selectedItem.dueDate.year, selectedItem.dueDate.month, selectedItem.dueDate.day, new DatePicker.OnDateChangedListener() {
+            @Override
+            public void onDateChanged(DatePicker datePicker, int i, int i1, int i2) {
+                selectedItem.dueDate.year = i;
+                selectedItem.dueDate.month = i1;
+                selectedItem.dueDate.day = i2;
+            }
+        });
     }
 
     public void saveItem() {
-        selectedItem = new Item(userSelectedEditText.getText().toString(), deadlineDate, todoDetails.getText().toString(), String.valueOf(priorityLevels.getSelectedItem()), creationDate);
+        captureDataFromViews();
+        if (requestCode == NEW_ITEM_REQUEST_CODE) {
+            selectedItem = new Item(userSelectedEditText.getText().toString(), deadlineDate, todoDetails.getText().toString(), String.valueOf(priorityLevels.getSelectedItem()), creationDate);
+        }
         saveItemForMainActivity(requestCode);
     }
 
     private void saveItemForMainActivity(int index) {
-        Intent userUpdatedTask = new Intent();
+        Intent userUpdatedTask = new Intent(EditItemActivity.this, MainActivity.class);
         userUpdatedTask.putExtra(SELECTED_ITEM, selectedItem);
         setResult(index, userUpdatedTask);
         finish();
