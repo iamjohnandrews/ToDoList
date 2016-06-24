@@ -19,16 +19,11 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<String> todoItems;
     ArrayAdapter<String> aToDoAdapter;
     ListView lvItems;
-
-    ArrayList<String> todoItemsPriority;
-    ListView lvPriorityLevels;
-    ArrayAdapter<String> priorityAdapter;
     private final int EDITED_ITEM_REQUEST_CODE = 20;
     int selectedIndexRow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-//        setTheme(R.style.mainAppTheme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         populateArrayItems();
@@ -40,7 +35,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
                 todoItems.remove(i);
-                todoItemsPriority.remove(i);
                 updateListViewAndPersistItems();
                 return true;
             }
