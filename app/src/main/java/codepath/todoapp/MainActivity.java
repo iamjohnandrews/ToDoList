@@ -12,25 +12,19 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import org.apache.commons.io.FileUtils;
-
-import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
-import java.io.OutputStreamWriter;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.io.Serializable;
 
 
 public class MainActivity extends AppCompatActivity {
 
     ArrayList<Item> todoItems;
+    ArrayList<String> taskNames;
+    ArrayList<String> priorityLevels;
     ArrayAdapter<String> aToDoAdapter;
     ArrayAdapter<String> priorityAdapter;
     ListView lvItems;
@@ -87,11 +81,11 @@ public class MainActivity extends AppCompatActivity {
 
     public void populateArrayItems() {
         readItems();
-        ArrayList<String> tempNameArray = retrieveStringsFromItemObjects(TASK_NAME);
-        aToDoAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, tempNameArray);
+        taskNames = retrieveStringsFromItemObjects(TASK_NAME);
+        aToDoAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, taskNames);
 
-        ArrayList<String> tempPriorityArray = retrieveStringsFromItemObjects(PRIORITY_LEVEL);
-        priorityAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, tempPriorityArray);
+        priorityLevels = retrieveStringsFromItemObjects(PRIORITY_LEVEL);
+        priorityAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, priorityLevels);
     }
 
     //region Private Methods
@@ -150,6 +144,18 @@ public class MainActivity extends AppCompatActivity {
         return arrayOfStrings;
     }
 
+    private void addItemToArrays(Item item, int index) {
+        todoItems.add(index, item);
+        taskNames.add(item.taskName);
+        priorityLevels.add(item.priorityLevel);
+    }
+
+    private void  removeItemsFromArrays() {
+        todoItems.remove(selectedIndexRow);
+        taskNames.remove(selectedIndexRow);
+        priorityLevels.remove(selectedIndexRow);
+    }
+
     private void createTestItemToAddToArrayList() {
         todoItems = new ArrayList<Item>();
 
@@ -184,10 +190,11 @@ public class MainActivity extends AppCompatActivity {
         Item newItem = (Item) data.getExtras().getSerializable(EditItemActivity.SELECTED_ITEM);
 
         if (requestCode == EDITED_ITEM_REQUEST_CODE) {
-            todoItems.remove(selectedIndexRow);
-            todoItems.add(selectedIndexRow, newItem);
+            removeItemsFromArrays();
+            addItemToArrays(newItem, selectedIndexRow);
+        } else if (requestCode == NEW_ITEM_REQUEST_CODE) {
+            addItemToArrays(newItem, todoItems.size());
         }
-        todoItems.add(todoItems.size(), newItem);
         updateListViewAndPersistItems();
     }
 }
