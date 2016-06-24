@@ -9,6 +9,4 @@ public class Date implements Serializable{
     public Integer year;
     public Integer month;
     public Integer day;
-
-
 }
