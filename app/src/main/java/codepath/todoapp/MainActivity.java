@@ -3,6 +3,7 @@ package codepath.todoapp;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -85,7 +86,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void populateArrayItems() {
-        readItems();
+//        readItems();
+        createTestItemToAddToArrayList();
         ArrayList<String> tempNameArray = retrieveStringsFromItemObjects(TASK_NAME);
         aToDoAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, tempNameArray);
 
@@ -162,14 +164,14 @@ public class MainActivity extends AppCompatActivity {
     }
     //endregion
 
-    public void navigateToEditActivity(int index) {
+    public void navigateToEditActivity(int requestCode) {
         Intent transitionToEdit = new Intent(MainActivity.this, EditItemActivity.class);
 
-        if (index == EDITED_ITEM_REQUEST_CODE) {
-            transitionToEdit.putExtra("Item", todoItems.get(selectedIndexRow));
+        if (requestCode == EDITED_ITEM_REQUEST_CODE) {
+            transitionToEdit.putExtra(EditItemActivity.SELECTED_ITEM, todoItems.get(selectedIndexRow));
+            Log.d("MainActivity", "inserted selected row");
         }
-        startActivity(transitionToEdit);
-//        startActivityForResult(transitionToEdit, index);
+        startActivityForResult(transitionToEdit, requestCode);
     }
 
 
