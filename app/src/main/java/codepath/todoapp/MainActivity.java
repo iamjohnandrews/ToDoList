@@ -13,10 +13,12 @@ import org.apache.commons.io.FileUtils;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.io.Serializable;
+
 
 public class MainActivity extends AppCompatActivity {
 
-    ArrayList<String> todoItems;
+    ArrayList<Item> todoItems;
     ArrayAdapter<String> aToDoAdapter;
     ListView lvItems;
     private final int EDITED_ITEM_REQUEST_CODE = 20;
@@ -83,6 +85,12 @@ public class MainActivity extends AppCompatActivity {
     }
     //endregion
 
+    public void onAddItem(View view) {
+        System.out.println("onAddItem called WTF");
+        aToDoAdapter.add(etEditText.getText().toString());
+        etEditText.setText("");
+        writeItems();
+    }
 
     public void navigateToEditActivity(int index) {
         selectedIndexRow = index;
@@ -98,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == EDITED_ITEM_REQUEST_CODE && requestCode == EDITED_ITEM_REQUEST_CODE) {
             todoItems.remove(selectedIndexRow);
 
-            String newItem = data.getExtras().getString(EditItemActivity.EDITED_TASK_NAME);
+            Item newItem = (Item) data.getExtras().getSerializable(EditItemActivity.SELECTED_ITEM);
             todoItems.add(selectedIndexRow, newItem);
 
             updateListViewAndPersistItems();

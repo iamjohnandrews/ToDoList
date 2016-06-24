@@ -1,53 +1,85 @@
 package codepath.todoapp;
 
+import android.app.DatePickerDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.content.Intent;
 import android.widget.Spinner;
+import java.io.Serializable;
+import java.util.Calendar;
+
 
 public class EditItemActivity extends AppCompatActivity {
 
     EditText userSelectedEditText;
-    String userEditedText;
     EditText todoDetails;
-    String userAddedTaskNotes;
     Spinner priorityLevels;
-    String userSelectedPriorityLevel;
     public static final String SELECTED_ITEM = "selectedItem";
-    public static final String EDITED_TASK_NAME = "editedTaskName";
-    public static final String EDITED_TASK_NOTES = "editedTaskNotes";
-    public static final String EDITED_PRIORITY_LEVEL = "editedPriorityLevel";
+    Item selectedItem;
+    DatePicker itemDatePicker;
+    Date creationDate;
+    Date deadlineDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_item);
-        String selectedItem = getIntent().getStringExtra(SELECTED_ITEM);
+//        selectedItem = getIntent().getStringExtra(SELECTED_ITEM);
+        selectedItem = (Item) getIntent().getSerializableExtra(SELECTED_ITEM);
 
-        userSelectedEditText = (EditText) findViewById(R.id.userSelectedEditText);
-        userSelectedEditText.setText(selectedItem);
-
-        todoDetails = (EditText) findViewById(R.id.toDoDetails);
-        priorityLevels = (Spinner) findViewById(R.id.levels);
+        if (selectedItem == null) {
+            setCurrentDateOnView();
+        } else {
+            userSelectedEditText = (EditText) findViewById(R.id.userSelectedEditText);
+            userSelectedEditText.setText(selectedItem.taskName);
+            todoDetails = (EditText) findViewById(R.id.toDoDetails);
+            todoDetails.setText(selectedItem.taskNote);
+            priorityLevels = (Spinner) findViewById(R.id.levels);
+            priorityLevels.setPrompt(selectedItem.priorityLevel);
+            itemDatePicker = (DatePicker) findViewById(R.id.datePicker);
+        }
     }
 
+    private void setCurrentDateOnView() {
+        creationDate = new Date();
+        final Calendar today = Calendar.getInstance();
+        creationDate.year = today.get(Calendar.YEAR);
+        creationDate.month = today.get(Calendar.MONTH);
+        creationDate.day = today.get(Calendar.DAY_OF_MONTH);
 
+        itemDatePicker = (DatePicker) findViewById(R.id.datePicker);
+        itemDatePicker.init(creationDate.year, creationDate.month, creationDate.day, null);
+    }
+
+    private DatePickerDialog.OnDateSetListener datePickerListener = new DatePickerDialog.OnDateSetListener() {
+
+        // when dialog box is closed, below method will be called.
+        public void onDateSet(DatePicker view, int selectedYear, int selectedMonth, int selectedDay) {
+            deadlineDate = new Date();
+            deadlineDate.year = selectedYear;
+            deadlineDate.month = selectedMonth;
+            deadlineDate.day = selectedDay;
+
+            // set selected date into datepicker also
+//            dpResult.init(year, month, day, null);
+
+        }
+    };
 
     public void saveItem(View view) {
-        userEditedText = userSelectedEditText.getText().toString();
-        userAddedTaskNotes = todoDetails.getText().toString();
-        userSelectedPriorityLevel = String.valueOf(priorityLevels.getSelectedItem());
+        Item updatedItem = new Item();
+        updatedItem.taskName = userSelectedEditText.getText().toString();
+        updatedItem.taskNote = todoDetails.getText().toString();
+        updatedItem.priorityLevel = String.valueOf(priorityLevels.getSelectedItem());
         saveEditedTextForMainActivity();
     }
 
     private void saveEditedTextForMainActivity() {
         Intent userUpdatedTask = new Intent();
-        userUpdatedTask.putExtra(EDITED_TASK_NAME, userEditedText);
-        userUpdatedTask.putExtra(EDITED_TASK_NOTES, userAddedTaskNotes);
-        userUpdatedTask.putExtra(EDITED_PRIORITY_LEVEL, userSelectedPriorityLevel);
-
+        userUpdatedTask.putExtra(SELECTED_ITEM, selectedItem);
         setResult(20, userUpdatedTask);
         finish();
     }

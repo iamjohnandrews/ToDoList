@@ -1,12 +1,15 @@
 package codepath.todoapp;
 
+import java.io.Serializable;
+
 /**
  * Created by andrj148 on 6/23/16.
  */
-public class Item {
+
+public class Item implements Serializable {
     public String taskName;
-    public String dueDate;
+    public Date dueDate;
     public String taskNote;
     public String priorityLevel;
-    public String creationDate;
+    public Date creationDate;
 }
