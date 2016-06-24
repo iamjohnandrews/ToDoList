@@ -107,23 +107,26 @@ public class MainActivity extends AppCompatActivity {
                 }
             objectInStream.close();
 
-//            todoItems = new ArrayList<Item>(FileUtils.readLines(file));
         } catch (IOException e) {
-            System.out.println("todoItems array created in Exception");
-            todoItems = new ArrayList<Item>();
-
-            Date testDate1 = new Date();
-            testDate1.year = 2016;
-            testDate1.month = 5;
-            testDate1.day = 13;
-            Date testDate2 = new Date();
-            testDate2.year = 2016;
-            testDate2.month = 9;
-            testDate2.day = 23;
-
-            Item testItem = new Item("Item 1", testDate1, "Item1 notes", "High", testDate2);
-            todoItems.add(testItem);
+            e.printStackTrace();
+           createTestItemToAddToArrayList();
         }
+    }
+
+    private void createTestItemToAddToArrayList() {
+        todoItems = new ArrayList<Item>();
+
+        Date testDate1 = new Date();
+        testDate1.year = 2016;
+        testDate1.month = 5;
+        testDate1.day = 13;
+        Date testDate2 = new Date();
+        testDate2.year = 2016;
+        testDate2.month = 9;
+        testDate2.day = 23;
+
+        Item testItem = new Item("Item 1", testDate1, "Item1 notes", "High", testDate2);
+        todoItems.add(testItem);
     }
 
     private void writeItems() {

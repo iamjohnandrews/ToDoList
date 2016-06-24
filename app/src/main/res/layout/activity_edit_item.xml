@@ -25,7 +25,9 @@
         android:layout_alignBottom="@+id/userSelectedEditText"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:text="@string/taskNameLabel" />
+        android:text="@string/taskNameLabel"
+        android:textColor="@android:color/holo_green_dark"
+        android:textStyle="bold"/>
 
     <EditText
         android:layout_width="wrap_content"
@@ -34,7 +36,9 @@
         android:layout_below="@+id/taskName"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:text="@string/dueDateLabel" />
+        android:text="@string/dueDateLabel"
+        android:textColor="@android:color/holo_green_dark"
+        android:textStyle="bold"/>
 
     <DatePicker
         android:layout_width="wrap_content"
@@ -51,7 +55,8 @@
         android:id="@+id/priorityLevel"
         android:layout_above="@+id/taskNote"
         android:text="@string/priorityLevelLabel"
-        />
+        android:textColor="@android:color/holo_green_dark"
+        android:textStyle="bold"/>
 
     <Spinner
         android:id="@+id/levels"
@@ -68,7 +73,9 @@
         android:layout_height="wrap_content"
         android:id="@+id/taskNote"
         android:layout_alignParentBottom="true"
-        android:text="@string/taskNoteLabel" />
+        android:text="@string/taskNoteLabel"
+        android:textColor="@android:color/holo_green_dark"
+        android:textStyle="bold"/>
 
     <EditText
         android:layout_width="wrap_content"
