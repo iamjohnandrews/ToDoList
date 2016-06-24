@@ -30,10 +30,14 @@ import java.io.Serializable;
 public class MainActivity extends AppCompatActivity {
 
     ArrayList<Item> todoItems;
-    ArrayAdapter<Item> aToDoAdapter;
+    ArrayAdapter<String> aToDoAdapter;
+    ArrayAdapter<String> priorityAdapter;
     ListView lvItems;
+    ListView lvpriorityLevels;
     int selectedIndexRow;
     private final String ITEMS_OBJECT_ARRAY = "persistedItemsArray";
+    private final String TASK_NAME = "taskName";
+    private final String PRIORITY_LEVEL = "priority";
     private final int EDITED_ITEM_REQUEST_CODE = 20;
     public final int NEW_ITEM_REQUEST_CODE = 10;
 
@@ -43,7 +47,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         populateArrayItems();
-
 
         lvItems = (ListView) findViewById(R.id.lvItems);
         lvItems.setAdapter(aToDoAdapter);
@@ -61,6 +64,8 @@ public class MainActivity extends AppCompatActivity {
                 navigateToEditActivity(EDITED_ITEM_REQUEST_CODE);
             }
         });
+        lvpriorityLevels = (ListView) findViewById(R.id.lvpriorityLevels);
+        lvpriorityLevels.setAdapter(priorityAdapter);
     }
 
     @Override
@@ -81,14 +86,15 @@ public class MainActivity extends AppCompatActivity {
 
     public void populateArrayItems() {
         readItems();
-        aToDoAdapter = new ArrayAdapter<Item>(this, android.R.layout.simple_list_item_1, todoItems);
+        ArrayList<String> tempNameArray = retrieveStringsFromItemObjects(TASK_NAME);
+        aToDoAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, tempNameArray);
+
+        ArrayList<String> tempPriorityArray = retrieveStringsFromItemObjects(PRIORITY_LEVEL);
+        priorityAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, tempPriorityArray);
     }
 
     //region Private Methods
     private void readItems() {
-//        File fileDir = getFilesDir();
-//        File file = new File(fileDir, "todo.txt");
-
         try {
             FileInputStream inStream = openFileInput(ITEMS_OBJECT_ARRAY);
             ObjectInputStream objectInStream = new ObjectInputStream(inStream);
@@ -121,9 +127,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void writeItems() {
-//        File fileDir = getFilesDir();
-//        File file = new File(fileDir, "todo.txt");
-
         try {
             FileOutputStream outStream = openFileOutput(ITEMS_OBJECT_ARRAY, MODE_PRIVATE);
             ObjectOutputStream objectOutStream = new ObjectOutputStream(outStream);
@@ -131,8 +134,6 @@ public class MainActivity extends AppCompatActivity {
             for (Item taskItem:todoItems)
                 objectOutStream.writeObject(taskItem);
             objectOutStream.close();
-
-//            FileUtils.writeLines(file, todoItems);
         } catch (IOException e) {
             System.out.println("Exception thrown in WRITEItems WTF");
             e.printStackTrace();
@@ -142,6 +143,19 @@ public class MainActivity extends AppCompatActivity {
     private void updateListViewAndPersistItems() {
         aToDoAdapter.notifyDataSetChanged();
         writeItems();
+    }
+
+    private ArrayList<String> retrieveStringsFromItemObjects(String itemType) {
+        ArrayList<String> arrayOfStrings = new ArrayList<String>();
+
+        if (itemType.equalsIgnoreCase(TASK_NAME)) {
+            for (Item item:todoItems)
+                arrayOfStrings.add(item.taskName);
+        } else if (itemType.equalsIgnoreCase(PRIORITY_LEVEL))
+            for (Item item:todoItems)
+                arrayOfStrings.add(item.priorityLevel);
+
+        return arrayOfStrings;
     }
     //endregion
 
@@ -157,7 +171,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        System.out.println("onActivityResult called");
         if (requestCode == EDITED_ITEM_REQUEST_CODE) {
             todoItems.remove(selectedIndexRow);
 
