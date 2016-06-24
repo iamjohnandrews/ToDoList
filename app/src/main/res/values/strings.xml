@@ -8,6 +8,7 @@
     <string name="taskNoteLabel">Task Note</string>
     <string name="priorityLevelLabel">Priority</string>
     <string name="toDoDetails">Add details here...</string>
+    <string name="createNewTaskItem">New Task</string>
     <string-array name="levels">
         <item>High</item>
         <item>Medium</item>

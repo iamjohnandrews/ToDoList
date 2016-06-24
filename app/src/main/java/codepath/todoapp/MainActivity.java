@@ -10,8 +10,16 @@ import android.widget.ListView;
 
 import org.apache.commons.io.FileUtils;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
+import java.io.OutputStreamWriter;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.io.Serializable;
 
@@ -19,10 +27,13 @@ import java.io.Serializable;
 public class MainActivity extends AppCompatActivity {
 
     ArrayList<Item> todoItems;
-    ArrayAdapter<String> aToDoAdapter;
+    ArrayAdapter<Item> aToDoAdapter;
     ListView lvItems;
-    private final int EDITED_ITEM_REQUEST_CODE = 20;
     int selectedIndexRow;
+    private final String ITEMS_OBJECT_ARRAY = "persistedItemsArray";
+    private final int EDITED_ITEM_REQUEST_CODE = 20;
+    public final int NEW_ITEM_REQUEST_CODE = 10;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,29 +61,54 @@ public class MainActivity extends AppCompatActivity {
 
     public void populateArrayItems() {
         readItems();
-        aToDoAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, todoItems);
+        aToDoAdapter = new ArrayAdapter<Item>(this, android.R.layout.simple_list_item_1, todoItems);
     }
 
     //region Private Methods
     private void readItems() {
-        File fileDir = getFilesDir();
-        File file = new File(fileDir, "todo.txt");
+//        File fileDir = getFilesDir();
+//        File file = new File(fileDir, "todo.txt");
 
         try {
-            todoItems = new ArrayList<String>(FileUtils.readLines(file));
+            FileInputStream inStream = openFileInput(ITEMS_OBJECT_ARRAY);
+            ObjectInputStream objectInStream = new ObjectInputStream(inStream);
+            int count = objectInStream.readInt();
+
+            todoItems = (ArrayList<Item>) objectInStream.readObject());
+            objectInStream.close();
+
+//            todoItems = new ArrayList<Item>(FileUtils.readLines(file));
         } catch (IOException e) {
             System.out.println("todoItems array created in Exception");
-            todoItems = new ArrayList<String>();
-            todoItems.add("Item 1");
+            todoItems = new ArrayList<Item>();
+
+            Date testDate1 = new Date();
+            testDate1.year = 2016;
+            testDate1.month = 5;
+            testDate1.day = 13;
+            Date testDate2 = new Date();
+            testDate2.year = 2016;
+            testDate2.month = 9;
+            testDate2.day = 23;
+
+            Item testItem = new Item("Item 1", testDate1, "Item1 notes", "High", testDate2);
+            todoItems.add(testItem);
         }
     }
 
     private void writeItems() {
-        File fileDir = getFilesDir();
-        File file = new File(fileDir, "todo.txt");
+//        File fileDir = getFilesDir();
+//        File file = new File(fileDir, "todo.txt");
 
         try {
-            FileUtils.writeLines(file, todoItems);
+            FileOutputStream outStream = openFileOutput(ITEMS_OBJECT_ARRAY, MODE_PRIVATE);
+            ObjectOutputStream objectOutStream = new ObjectOutputStream(outStream);
+            objectOutStream.writeInt(todoItems.size());
+            for (Item taskItem:todoItems)
+                objectOutStream.writeObject(taskItem);
+            objectOutStream.close();
+
+//            FileUtils.writeLines(file, todoItems);
         } catch (IOException e) {
             System.out.println("Exception thrown in WRITEItems WTF");
             e.printStackTrace();
@@ -87,10 +123,9 @@ public class MainActivity extends AppCompatActivity {
 
     public void onAddItem(View view) {
         System.out.println("onAddItem called WTF");
-        aToDoAdapter.add(etEditText.getText().toString());
-        etEditText.setText("");
-        writeItems();
+
     }
+
 
     public void navigateToEditActivity(int index) {
         selectedIndexRow = index;
