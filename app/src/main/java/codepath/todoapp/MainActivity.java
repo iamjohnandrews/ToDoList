@@ -73,8 +73,12 @@ public class MainActivity extends AppCompatActivity {
             FileInputStream inStream = openFileInput(ITEMS_OBJECT_ARRAY);
             ObjectInputStream objectInStream = new ObjectInputStream(inStream);
             int count = objectInStream.readInt();
-
-            todoItems = (ArrayList<Item>) objectInStream.readObject());
+            for (int i = 0; i < count; i++)
+                try {
+                    todoItems.add((Item) objectInStream.readObject());
+                } catch (Exception e) {
+                    System.out.println("Could not retrieve object from Local File storage");
+                }
             objectInStream.close();
 
 //            todoItems = new ArrayList<Item>(FileUtils.readLines(file));
