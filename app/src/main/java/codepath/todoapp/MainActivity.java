@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
         lvItems.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-                todoItems.remove(i);
+                removeItemsFromArrays(i);
                 updateListViewAndPersistItems();
                 return true;
             }
@@ -150,10 +150,10 @@ public class MainActivity extends AppCompatActivity {
         priorityLevels.add(item.priorityLevel);
     }
 
-    private void  removeItemsFromArrays() {
-        todoItems.remove(selectedIndexRow);
-        taskNames.remove(selectedIndexRow);
-        priorityLevels.remove(selectedIndexRow);
+    private void  removeItemsFromArrays(int index) {
+        todoItems.remove(index);
+        taskNames.remove(index);
+        priorityLevels.remove(index);
     }
 
     private void createTestItemToAddToArrayList() {
@@ -190,7 +190,7 @@ public class MainActivity extends AppCompatActivity {
         Item newItem = (Item) data.getExtras().getSerializable(EditItemActivity.SELECTED_ITEM);
 
         if (requestCode == EDITED_ITEM_REQUEST_CODE) {
-            removeItemsFromArrays();
+            removeItemsFromArrays(selectedIndexRow);
             addItemToArrays(newItem, selectedIndexRow);
         } else if (requestCode == NEW_ITEM_REQUEST_CODE) {
             addItemToArrays(newItem, todoItems.size());
