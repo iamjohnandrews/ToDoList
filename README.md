@@ -35,7 +35,7 @@ GIF created with [LiceCap](http://www.cockos.com/licecap/).
 ## Notes
 
 Describe any challenges encountered while building the app.
-
+I had trouble with persistence. Both with using SQLite directly as well as using na ORM. That is why I opted to persist using Local Files.
 ## License
 
     Copyright [2016] [John Andrews]
