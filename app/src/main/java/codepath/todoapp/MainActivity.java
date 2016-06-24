@@ -86,8 +86,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void populateArrayItems() {
-//        readItems();
-        createTestItemToAddToArrayList();
+        readItems();
         ArrayList<String> tempNameArray = retrieveStringsFromItemObjects(TASK_NAME);
         aToDoAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, tempNameArray);
 
@@ -97,6 +96,8 @@ public class MainActivity extends AppCompatActivity {
 
     //region Private Methods
     private void readItems() {
+        todoItems = new ArrayList<>();
+
         try {
             FileInputStream inStream = openFileInput(ITEMS_OBJECT_ARRAY);
             ObjectInputStream objectInStream = new ObjectInputStream(inStream);
@@ -112,10 +113,13 @@ public class MainActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
            createTestItemToAddToArrayList();
+            Log.d("MainActivity", "WTF are you doing John");
+            writeItems();
         }
     }
 
     private void createTestItemToAddToArrayList() {
+        Log.d("MainActivity", "createTestItemToAddToArrayList() called with: " + "");
         todoItems = new ArrayList<Item>();
 
         Date testDate1 = new Date();
@@ -136,8 +140,9 @@ public class MainActivity extends AppCompatActivity {
             FileOutputStream outStream = openFileOutput(ITEMS_OBJECT_ARRAY, MODE_PRIVATE);
             ObjectOutputStream objectOutStream = new ObjectOutputStream(outStream);
             objectOutStream.writeInt(todoItems.size());
-            for (Item taskItem:todoItems)
+            for (Item taskItem:todoItems) {
                 objectOutStream.writeObject(taskItem);
+            }
             objectOutStream.close();
         } catch (IOException e) {
             System.out.println("Exception thrown in WRITEItems WTF");
@@ -154,12 +159,13 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<String> arrayOfStrings = new ArrayList<String>();
 
         if (itemType.equalsIgnoreCase(TASK_NAME)) {
-            for (Item item:todoItems)
+            for (Item item:todoItems) {
                 arrayOfStrings.add(item.taskName);
+            }
         } else if (itemType.equalsIgnoreCase(PRIORITY_LEVEL))
-            for (Item item:todoItems)
+            for (Item item:todoItems) {
                 arrayOfStrings.add(item.priorityLevel);
-
+            }
         return arrayOfStrings;
     }
     //endregion
