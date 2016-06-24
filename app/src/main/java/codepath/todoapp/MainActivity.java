@@ -112,27 +112,7 @@ public class MainActivity extends AppCompatActivity {
 
         } catch (IOException e) {
             e.printStackTrace();
-           createTestItemToAddToArrayList();
-            Log.d("MainActivity", "WTF are you doing John");
-            writeItems();
         }
-    }
-
-    private void createTestItemToAddToArrayList() {
-        Log.d("MainActivity", "createTestItemToAddToArrayList() called with: " + "");
-        todoItems = new ArrayList<Item>();
-
-        Date testDate1 = new Date();
-        testDate1.year = 2016;
-        testDate1.month = 5;
-        testDate1.day = 13;
-        Date testDate2 = new Date();
-        testDate2.year = 2016;
-        testDate2.month = 9;
-        testDate2.day = 23;
-
-        Item testItem = new Item("Item 1", testDate1, "Item1 notes", "High", testDate2);
-        todoItems.add(testItem);
     }
 
     private void writeItems() {
@@ -152,6 +132,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void updateListViewAndPersistItems() {
         aToDoAdapter.notifyDataSetChanged();
+        priorityAdapter.notifyDataSetChanged();
         writeItems();
     }
 
@@ -167,6 +148,22 @@ public class MainActivity extends AppCompatActivity {
                 arrayOfStrings.add(item.priorityLevel);
             }
         return arrayOfStrings;
+    }
+
+    private void createTestItemToAddToArrayList() {
+        todoItems = new ArrayList<Item>();
+
+        Date testDate1 = new Date();
+        testDate1.year = 2016;
+        testDate1.month = 5;
+        testDate1.day = 13;
+        Date testDate2 = new Date();
+        testDate2.year = 2016;
+        testDate2.month = 9;
+        testDate2.day = 23;
+
+        Item testItem = new Item("Item 1", testDate1, "Item1 notes", "High", testDate2);
+        todoItems.add(testItem);
     }
     //endregion
 
@@ -184,12 +181,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        Item newItem = (Item) data.getExtras().getSerializable(EditItemActivity.SELECTED_ITEM);
+
         if (requestCode == EDITED_ITEM_REQUEST_CODE) {
             todoItems.remove(selectedIndexRow);
-            Item newItem = (Item) data.getExtras().getSerializable(EditItemActivity.SELECTED_ITEM);
             todoItems.add(selectedIndexRow, newItem);
-
-            updateListViewAndPersistItems();
         }
+        todoItems.add(todoItems.size(), newItem);
+        updateListViewAndPersistItems();
     }
 }

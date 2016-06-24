@@ -41,8 +41,8 @@ public class EditItemActivity extends AppCompatActivity {
             requestCode = NEW_ITEM_REQUEST_CODE;
         } else {
             requestCode = EDITED_ITEM_REQUEST_CODE;
-            captureDataFromViews();
         }
+        accessViews();
     }
 
     @Override
@@ -81,11 +81,16 @@ public class EditItemActivity extends AppCompatActivity {
 
     private void captureDataFromViews() {
         Log.d("EditItemActivity", "captureDataFromViews() called with: " + "");
+        selectedItem.taskName = userSelectedEditText.getText().toString();
+        selectedItem.taskNote = todoDetails.getText().toString();
+        selectedItem.priorityLevel = String.valueOf(priorityLevels.getSelectedItem());
+    }
+
+    private void accessViews() {
         userSelectedEditText = (EditText) findViewById(R.id.userSelectedEditText);
         todoDetails = (EditText) findViewById(R.id.toDoDetails);
         priorityLevels = (Spinner) findViewById(R.id.levels);
         itemDatePicker = (DatePicker) findViewById(R.id.datePicker);
-
         if (requestCode == EDITED_ITEM_REQUEST_CODE) {
             setTextForViews();
         }
@@ -106,9 +111,10 @@ public class EditItemActivity extends AppCompatActivity {
     }
 
     public void saveItem() {
-        captureDataFromViews();
         if (requestCode == NEW_ITEM_REQUEST_CODE) {
             selectedItem = new Item(userSelectedEditText.getText().toString(), deadlineDate, todoDetails.getText().toString(), String.valueOf(priorityLevels.getSelectedItem()), creationDate);
+        } else {
+            captureDataFromViews();
         }
         saveItemForMainActivity(requestCode);
     }
