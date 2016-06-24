@@ -81,7 +81,6 @@ public class EditItemActivity extends AppCompatActivity {
     }
 
     private void captureDataFromViews() {
-        Log.d("EditItemActivity", "captureDataFromViews() called with: " + "");
         selectedItem.taskName = userSelectedEditText.getText().toString();
         selectedItem.taskNote = todoDetails.getText().toString();
         selectedItem.priorityLevel = String.valueOf(priorityLevels.getSelectedItem());

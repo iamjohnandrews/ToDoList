@@ -100,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     todoItems.add((Item) objectInStream.readObject());
                 } catch (Exception e) {
-                    System.out.println("Could not retrieve object from Local File storage");
+                    e.printStackTrace();
                 }
             objectInStream.close();
 
@@ -119,7 +119,6 @@ public class MainActivity extends AppCompatActivity {
             }
             objectOutStream.close();
         } catch (IOException e) {
-            System.out.println("Exception thrown in WRITEItems WTF");
             e.printStackTrace();
         }
     }
@@ -178,7 +177,6 @@ public class MainActivity extends AppCompatActivity {
 
         if (requestCode == EDITED_ITEM_REQUEST_CODE) {
             transitionToEdit.putExtra(EditItemActivity.SELECTED_ITEM, todoItems.get(selectedIndexRow));
-            Log.d("MainActivity", "inserted selected row");
         }
         startActivityForResult(transitionToEdit, requestCode);
     }
