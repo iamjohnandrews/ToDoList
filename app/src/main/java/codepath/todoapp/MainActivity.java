@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -56,7 +57,8 @@ public class MainActivity extends AppCompatActivity {
         });
         lvItems.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                navigateToEditActivity(position);
+                selectedIndexRow = position;
+                navigateToEditActivity(EDITED_ITEM_REQUEST_CODE);
             }
         });
     }
@@ -66,6 +68,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreateOptionsMenu(menu);
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.actionbar, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        super.onOptionsItemSelected(item);
+        System.out.println("WTF" + item.getItemId());
+        navigateToEditActivity(NEW_ITEM_REQUEST_CODE);
         return true;
     }
 
@@ -135,24 +145,20 @@ public class MainActivity extends AppCompatActivity {
     }
     //endregion
 
-    public void onAddItem(View view) {
-        System.out.println("onAddItem called WTF");
-
-    }
-
-
     public void navigateToEditActivity(int index) {
-        selectedIndexRow = index;
         Intent transitionToEdit = new Intent(MainActivity.this, EditItemActivity.class);
-        transitionToEdit.putExtra(EditItemActivity.SELECTED_ITEM,todoItems.get(index).toString());
-        startActivityForResult(transitionToEdit, EDITED_ITEM_REQUEST_CODE);
+
+        if (index == EDITED_ITEM_REQUEST_CODE) {
+            transitionToEdit.putExtra(EditItemActivity.SELECTED_ITEM, todoItems.get(index).toString());
+        }
+        startActivityForResult(transitionToEdit, index);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         System.out.println("onActivityResult called");
-        if (requestCode == EDITED_ITEM_REQUEST_CODE && requestCode == EDITED_ITEM_REQUEST_CODE) {
+        if (requestCode == EDITED_ITEM_REQUEST_CODE) {
             todoItems.remove(selectedIndexRow);
 
             Item newItem = (Item) data.getExtras().getSerializable(EditItemActivity.SELECTED_ITEM);

@@ -70,7 +70,7 @@ public class EditItemActivity extends AppCompatActivity {
     };
 
     public void saveItem(View view) {
-        Item updatedItem = new Item(userSelectedEditText.getText().toString(), deadlineDate, todoDetails.getText().toString(), String.valueOf(priorityLevels.getSelectedItem()), creationDate);
+        selectedItem = new Item(userSelectedEditText.getText().toString(), deadlineDate, todoDetails.getText().toString(), String.valueOf(priorityLevels.getSelectedItem()), creationDate);
         saveEditedTextForMainActivity();
     }
 
