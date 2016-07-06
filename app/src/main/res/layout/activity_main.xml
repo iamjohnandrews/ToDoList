@@ -8,8 +8,13 @@
     <ListView
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="0.75"
+        android:layout_weight="0.50"
         android:id="@+id/lvItems"/>
+    <ListView
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="0.25"
+        android:id="@+id/lvDueDates"/>
 
     <ListView
         android:layout_width="0dp"
