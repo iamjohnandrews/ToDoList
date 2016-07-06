@@ -62,20 +62,14 @@ public class EditItemActivity extends AppCompatActivity {
     }
 
     private void setCurrentDateOnView() {
-        creationDate = new Date();
         final Calendar today = Calendar.getInstance();
-        creationDate.year = today.get(Calendar.YEAR);
-        creationDate.month = today.get(Calendar.MONTH);
-        creationDate.day = today.get(Calendar.DAY_OF_MONTH);
+        creationDate = new Date(today.get(Calendar.YEAR), today.get(Calendar.MONTH), today.get(Calendar.DAY_OF_MONTH));
 
         itemDatePicker = (DatePicker) findViewById(R.id.datePicker);
         itemDatePicker.init(creationDate.year, creationDate.month, creationDate.day, new DatePicker.OnDateChangedListener() {
             @Override
             public void onDateChanged(DatePicker datePicker, int i, int i1, int i2) {
-                deadlineDate = new Date();
-                deadlineDate.year = i;
-                deadlineDate.month = i1;
-                deadlineDate.day = i2;
+                deadlineDate = new Date(i, 1 + i1, i2);
             }
         });
     }
@@ -84,6 +78,7 @@ public class EditItemActivity extends AppCompatActivity {
         selectedItem.taskName = userSelectedEditText.getText().toString();
         selectedItem.taskNote = todoDetails.getText().toString();
         selectedItem.priorityLevel = String.valueOf(priorityLevels.getSelectedItem());
+        selectedItem.dueDate = deadlineDate;
     }
 
     private void accessViews() {
@@ -102,13 +97,10 @@ public class EditItemActivity extends AppCompatActivity {
         ArrayAdapter<String> arraySpinner = (ArrayAdapter<String>) priorityLevels.getAdapter();
         priorityLevels.setSelection(arraySpinner.getPosition(selectedItem.priorityLevel));
 
-        itemDatePicker.init(selectedItem.dueDate.year, selectedItem.dueDate.month, selectedItem.dueDate.day, new DatePicker.OnDateChangedListener() {
+        itemDatePicker.init(selectedItem.dueDate.year, selectedItem.dueDate.month - 1, selectedItem.dueDate.day, new DatePicker.OnDateChangedListener() {
             @Override
             public void onDateChanged(DatePicker datePicker, int i, int i1, int i2) {
-                selectedItem.dueDate.year = i;
-                selectedItem.dueDate.month = 1 + i1;
-                System.out.print("WTF Month variable = " + i1);
-                selectedItem.dueDate.day = i2;
+                deadlineDate = new Date(i, 1 + i1, i2);
             }
         });
     }

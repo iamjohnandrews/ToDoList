@@ -133,6 +133,7 @@ public class MainActivity extends AppCompatActivity {
     private void updateListViewAndPersistItems() {
         aToDoAdapter.notifyDataSetChanged();
         priorityAdapter.notifyDataSetChanged();
+        dueDateAdapter.notifyDataSetChanged();
         writeItems();
     }
 
@@ -170,7 +171,6 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     selectedPriority.setTextColor(Color.BLACK);
                 }
-                System.out.print("WTF Priority = " + selectedPriority.getText().toString());
                 return cell;
             }
         });
@@ -202,14 +202,8 @@ public class MainActivity extends AppCompatActivity {
     private void createTestItemToAddToArrayList() {
         todoItems = new ArrayList<Item>();
 
-        Date testDate1 = new Date();
-        testDate1.year = 2016;
-        testDate1.month = 5;
-        testDate1.day = 13;
-        Date testDate2 = new Date();
-        testDate2.year = 2016;
-        testDate2.month = 9;
-        testDate2.day = 23;
+        Date testDate1 = new Date(2016, 11, 13);
+        Date testDate2 = new Date(2016, 9, 23);
 
         Item testItem = new Item("Item 1", testDate1, "Item1 notes", "High", testDate2);
         todoItems.add(testItem);
