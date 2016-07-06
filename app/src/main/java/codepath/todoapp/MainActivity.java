@@ -26,10 +26,10 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<Item> todoItems;
     ArrayList<String> taskNames;
     ArrayList<String> priorityLevels;
-    ArrayList<Date> dueDates;
+    ArrayList<String> dueDates;
     ArrayAdapter<String> aToDoAdapter;
     ArrayAdapter<String> priorityAdapter;
-    ArrayAdapter<Date> dueDateAdapter;
+    ArrayAdapter<String> dueDateAdapter;
     ListView lvItems;
     ListView lvpriorityLevels;
     ListView lvDueDates;
@@ -37,7 +37,6 @@ public class MainActivity extends AppCompatActivity {
     private final String ITEMS_OBJECT_ARRAY = "persistedItemsArray";
     private final int EDITED_ITEM_REQUEST_CODE = 20;
     private final int NEW_ITEM_REQUEST_CODE = 10;
-
 
 
     @Override
@@ -135,28 +134,43 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void iterateThroughItemsToDisplayObjects() {
-        for (Item item:todoItems) {
-            dueDates.add(item.dueDate);
-            priorityLevels.add(item.priorityLevel);
-            taskNames.add(item.taskName);
+        if (taskNames == null) {
+            createArrayListsIfNeeded();
         }
+        for (Item item:todoItems) {
+            taskNames.add(item.taskName);
+            dueDates.add(convertDateToString(item.dueDate));
+            priorityLevels.add(item.priorityLevel);
+        }
+    }
+
+    private void createArrayListsIfNeeded() {
+        taskNames = new ArrayList<String>();
+        priorityLevels = new ArrayList<String>();
+        dueDates = new ArrayList<String>();
     }
 
     private void bindArraysToListViews() {
         aToDoAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, taskNames);
-        dueDateAdapter = new ArrayAdapter<Date>(this, android.R.layout.simple_list_item_1, dueDates);
+        dueDateAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, dueDates);
         priorityAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, priorityLevels);
     }
 
     private void addItemToArrays(Item item, int index) {
         todoItems.add(index, item);
         taskNames.add(item.taskName);
+        dueDates.add(convertDateToString(item.dueDate));
         priorityLevels.add(item.priorityLevel);
+    }
+
+    private String convertDateToString(Date date) {
+        return date.month.toString() + "/" + date.day.toString() + "/" + date.year.toString();
     }
 
     private void  removeItemsFromArrays(int index) {
         todoItems.remove(index);
         taskNames.remove(index);
+        dueDates.remove(index);
         priorityLevels.remove(index);
     }
 
