@@ -17,6 +17,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 
@@ -25,14 +26,15 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<Item> todoItems;
     ArrayList<String> taskNames;
     ArrayList<String> priorityLevels;
+    ArrayList<Date> dueDates;
     ArrayAdapter<String> aToDoAdapter;
     ArrayAdapter<String> priorityAdapter;
+    ArrayAdapter<Date> dueDateAdapter;
     ListView lvItems;
     ListView lvpriorityLevels;
+    ListView lvDueDates;
     int selectedIndexRow;
     private final String ITEMS_OBJECT_ARRAY = "persistedItemsArray";
-    private final String TASK_NAME = "taskName";
-    private final String PRIORITY_LEVEL = "priority";
     private final int EDITED_ITEM_REQUEST_CODE = 20;
     private final int NEW_ITEM_REQUEST_CODE = 10;
 
@@ -43,25 +45,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         populateArrayItems();
-
-        lvItems = (ListView) findViewById(R.id.lvItems);
-        lvItems.setAdapter(aToDoAdapter);
-        lvItems.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-                removeItemsFromArrays(i);
-                updateListViewAndPersistItems();
-                return true;
-            }
-        });
-        lvItems.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                selectedIndexRow = position;
-                navigateToEditActivity(EDITED_ITEM_REQUEST_CODE);
-            }
-        });
-        lvpriorityLevels = (ListView) findViewById(R.id.lvpriorityLevels);
-        lvpriorityLevels.setAdapter(priorityAdapter);
+        setUpAllListViews();
     }
 
     @Override
@@ -81,14 +65,35 @@ public class MainActivity extends AppCompatActivity {
 
     public void populateArrayItems() {
         readItems();
-        taskNames = retrieveStringsFromItemObjects(TASK_NAME);
-        aToDoAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, taskNames);
-
-        priorityLevels = retrieveStringsFromItemObjects(PRIORITY_LEVEL);
-        priorityAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, priorityLevels);
+        iterateThroughItemsToDisplayObjects();
+        bindArraysToListViews();
     }
 
     //region Private Methods
+    private void setUpAllListViews() {
+        lvItems = (ListView) findViewById(R.id.lvItems);
+        lvItems.setAdapter(aToDoAdapter);
+        lvItems.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                removeItemsFromArrays(i);
+                updateListViewAndPersistItems();
+                return true;
+            }
+        });
+        lvItems.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                selectedIndexRow = position;
+                navigateToEditActivity(EDITED_ITEM_REQUEST_CODE);
+            }
+        });
+        lvpriorityLevels = (ListView) findViewById(R.id.lvpriorityLevels);
+        lvpriorityLevels.setAdapter(priorityAdapter);
+
+        lvDueDates = (ListView) findViewById(R.id.lvDueDates);
+        lvDueDates.setAdapter(dueDateAdapter);
+    }
+
     private void readItems() {
         todoItems = new ArrayList<>();
 
@@ -129,18 +134,18 @@ public class MainActivity extends AppCompatActivity {
         writeItems();
     }
 
-    private ArrayList<String> retrieveStringsFromItemObjects(String itemType) {
-        ArrayList<String> arrayOfStrings = new ArrayList<String>();
+    private void iterateThroughItemsToDisplayObjects() {
+        for (Item item:todoItems) {
+            dueDates.add(item.dueDate);
+            priorityLevels.add(item.priorityLevel);
+            taskNames.add(item.taskName);
+        }
+    }
 
-        if (itemType.equalsIgnoreCase(TASK_NAME)) {
-            for (Item item:todoItems) {
-                arrayOfStrings.add(item.taskName);
-            }
-        } else if (itemType.equalsIgnoreCase(PRIORITY_LEVEL))
-            for (Item item:todoItems) {
-                arrayOfStrings.add(item.priorityLevel);
-            }
-        return arrayOfStrings;
+    private void bindArraysToListViews() {
+        aToDoAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, taskNames);
+        dueDateAdapter = new ArrayAdapter<Date>(this, android.R.layout.simple_list_item_1, dueDates);
+        priorityAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, priorityLevels);
     }
 
     private void addItemToArrays(Item item, int index) {
