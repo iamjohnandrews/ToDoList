@@ -1,6 +1,7 @@
 package codepath.todoapp;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -8,9 +9,11 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -153,8 +156,30 @@ public class MainActivity extends AppCompatActivity {
     private void bindArraysToListViews() {
         aToDoAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, taskNames);
         dueDateAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, dueDates);
-        priorityAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, priorityLevels);
+        priorityAdapter = textColorChangingAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, priorityLevels) {
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                View cell = super.getView(position, convertView, parent);
+
+                TextView selectedPriority = (TextView) cell;
+
+                if (selectedPriority.getText().toString().equalsIgnoreCase("High")) {
+                    selectedPriority.setTextColor(Color.RED);
+                } else if (selectedPriority.getText().toString().equalsIgnoreCase("Medium")) {
+                    selectedPriority.setTextColor(Color.MAGENTA);
+                } else {
+                    selectedPriority.setTextColor(Color.BLACK);
+                }
+                System.out.print("WTF Priority = " + selectedPriority.getText().toString());
+                return cell;
+            }
+        });
     }
+
+    private ArrayAdapter<String>  textColorChangingAdapter(ArrayAdapter<String> arrayAdapter) {
+        return arrayAdapter;
+    }
+
 
     private void addItemToArrays(Item item, int index) {
         todoItems.add(index, item);

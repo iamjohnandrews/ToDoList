@@ -106,7 +106,8 @@ public class EditItemActivity extends AppCompatActivity {
             @Override
             public void onDateChanged(DatePicker datePicker, int i, int i1, int i2) {
                 selectedItem.dueDate.year = i;
-                selectedItem.dueDate.month = i1;
+                selectedItem.dueDate.month = 1 + i1;
+                System.out.print("WTF Month variable = " + i1);
                 selectedItem.dueDate.day = i2;
             }
         });
