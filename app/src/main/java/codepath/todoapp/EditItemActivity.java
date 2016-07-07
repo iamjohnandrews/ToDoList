@@ -42,6 +42,7 @@ public class EditItemActivity extends AppCompatActivity {
             requestCode = NEW_ITEM_REQUEST_CODE;
         } else {
             requestCode = EDITED_ITEM_REQUEST_CODE;
+            deadlineDate = selectedItem.dueDate;
         }
         accessViews();
     }
