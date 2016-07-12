@@ -88,8 +88,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void retrieveItemsFromSugarORM() {
+        todoItems = new ArrayList<Item>();
         todoItems = Item.listAll(Item.class);
-        Item item = Item.findById(Item.class, 1);
+        Item item = Item.findById(Item.class, 1L);
 
     }
 
@@ -102,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateItemInSugarORM(int index, Item item) {
-        Item itemToUpdate = Item.findById(Item.class, index);
+        Item itemToUpdate = Item.findById(Item.class, Long.valueOf(index));
         itemToUpdate = item;
         itemToUpdate.save();
     }
