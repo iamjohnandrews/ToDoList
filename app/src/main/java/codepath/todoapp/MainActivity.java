@@ -31,7 +31,6 @@ public class MainActivity extends AppCompatActivity {
     ListView lvPriorityLevels;
     ListView lvDueDates;
     int selectedIndexRow;
-    private final String ITEMS_OBJECT_ARRAY = "persistedItemsArray";
     private final int EDITED_ITEM_REQUEST_CODE = 20;
     private final int NEW_ITEM_REQUEST_CODE = 10;
 
@@ -172,7 +171,6 @@ public class MainActivity extends AppCompatActivity {
         }
         startActivityForResult(transitionToEdit, requestCode);
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
