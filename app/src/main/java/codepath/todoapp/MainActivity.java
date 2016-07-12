@@ -22,11 +22,12 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity {
 
-    ArrayList<Item> todoItems;
+    List<Item> todoItems;
     ArrayList<String> taskNames;
     ArrayList<String> priorityLevels;
     ArrayList<String> dueDates;
@@ -97,36 +98,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void readItems() {
-        todoItems = new ArrayList<>();
-
-        try {
-            FileInputStream inStream = openFileInput(ITEMS_OBJECT_ARRAY);
-            ObjectInputStream objectInStream = new ObjectInputStream(inStream);
-            int count = objectInStream.readInt();
-            for (int i = 0; i < count; i++)
-                try {
-                    todoItems.add((Item) objectInStream.readObject());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            objectInStream.close();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        todoItems = Item.listAll(Item.class);
     }
 
     private void writeItems() {
-        try {
-            FileOutputStream outStream = openFileOutput(ITEMS_OBJECT_ARRAY, MODE_PRIVATE);
-            ObjectOutputStream objectOutStream = new ObjectOutputStream(outStream);
-            objectOutStream.writeInt(todoItems.size());
-            for (Item taskItem:todoItems) {
-                objectOutStream.writeObject(taskItem);
-            }
-            objectOutStream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+        for (Item taskItem:todoItems) {
+            taskItem.save();
         }
     }
 
