@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
                 removeItemsFromArrays(i);
-                updateListViewAndPersistItems();
+                updateListViewOfDataSourceChanges();
                 return true;
             }
         });
@@ -107,11 +107,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void updateListViewAndPersistItems() {
+    private void updateListViewOfDataSourceChanges() {
         aToDoAdapter.notifyDataSetChanged();
         priorityAdapter.notifyDataSetChanged();
         dueDateAdapter.notifyDataSetChanged();
-        writeItems();
     }
 
     private void iterateThroughItemsToDisplayObjects() {
@@ -174,6 +173,12 @@ public class MainActivity extends AppCompatActivity {
         taskNames.remove(index);
         dueDates.remove(index);
         priorityLevels.remove(index);
+
+        removeItemFromSugarORM(index);
+    }
+
+    private void removeItemFromSugarORM(int index) {
+        todoItems.get(index).delete();
     }
 
     private void createTestItemToAddToArrayList() {
@@ -208,6 +213,7 @@ public class MainActivity extends AppCompatActivity {
         } else if (requestCode == NEW_ITEM_REQUEST_CODE) {
             addItemToArrays(newItem, todoItems.size());
         }
-        updateListViewAndPersistItems();
+        writeItems();
+        updateListViewOfDataSourceChanges();
     }
 }

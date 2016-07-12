@@ -4,7 +4,7 @@ import com.orm.SugarRecord;
 
 import java.io.Serializable;
 
-public class Item extends SugarRecord {
+public class Item extends SugarRecord implements Serializable {
     public String taskName;
     public Date dueDate;
     public String taskNote;
