@@ -90,8 +90,6 @@ public class MainActivity extends AppCompatActivity {
     private void retrieveItemsFromSugarORM() {
         todoItems = new ArrayList<Item>();
         todoItems = Item.listAll(Item.class);
-        Item item = Item.findById(Item.class, 1L);
-
     }
 
     private void persistItemToSugarORM(Item item) {
