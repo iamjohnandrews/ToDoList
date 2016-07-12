@@ -1,8 +1,10 @@
 package codepath.todoapp;
 
+import com.orm.SugarRecord;
+
 import java.io.Serializable;
 
-public class Item implements Serializable {
+public class Item extends SugarRecord {
     public String taskName;
     public Date dueDate;
     public String taskNote;

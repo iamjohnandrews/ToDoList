@@ -1,11 +1,13 @@
 package codepath.todoapp;
 
+import com.orm.SugarRecord;
+
 import java.io.Serializable;
 
 /**
  * Created by andrj148 on 6/23/16.
  */
-public class Date implements Serializable{
+public class Date extends SugarRecord {
     public Integer year;
     public Integer month;
     public Integer day;
