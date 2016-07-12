@@ -68,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
         lvItems.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                removeItemFromSugarORM(i);
                 removeItemsFromArrays(i);
                 updateListViewOfDataSourceChanges();
                 return true;
@@ -153,8 +154,6 @@ public class MainActivity extends AppCompatActivity {
         taskNames.remove(index);
         dueDates.remove(index);
         priorityLevels.remove(index);
-
-        removeItemFromSugarORM(index);
     }
 
     private void createTestItemToAddToArrayList() {
