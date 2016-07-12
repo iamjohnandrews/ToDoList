@@ -1,18 +1,15 @@
 package codepath.todoapp;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void populateArrayItems() {
-        readItems();
+        retrieveItemsFromSugarORM();
         iterateThroughItemsToDisplayObjects();
         bindArraysToListViews();
     }
@@ -89,14 +86,24 @@ public class MainActivity extends AppCompatActivity {
         lvDueDates.setAdapter(dueDateAdapter);
     }
 
-    private void readItems() {
+    private void retrieveItemsFromSugarORM() {
         todoItems = Item.listAll(Item.class);
+        Item item = Item.findById(Item.class, 1);
+
     }
 
-    private void writeItems() {
-        for (Item taskItem:todoItems) {
-            taskItem.save();
-        }
+    private void persistItemToSugarORM(Item item) {
+        item.save();
+    }
+
+    private void removeItemFromSugarORM(int index) {
+        todoItems.get(index).delete();
+    }
+
+    private void updateItemInSugarORM(int index, Item item) {
+        Item itemToUpdate = Item.findById(Item.class, index);
+        itemToUpdate = item;
+        itemToUpdate.save();
     }
 
     private void updateListViewOfDataSourceChanges() {
@@ -133,6 +140,8 @@ public class MainActivity extends AppCompatActivity {
         taskNames.add(item.taskName);
         dueDates.add(convertDateToString(item.dueDate));
         priorityLevels.add(item.priorityLevel);
+
+        persistItemToSugarORM(item);
     }
 
     private String convertDateToString(Date date) {
@@ -146,10 +155,6 @@ public class MainActivity extends AppCompatActivity {
         priorityLevels.remove(index);
 
         removeItemFromSugarORM(index);
-    }
-
-    private void removeItemFromSugarORM(int index) {
-        todoItems.get(index).delete();
     }
 
     private void createTestItemToAddToArrayList() {
@@ -180,10 +185,11 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == EDITED_ITEM_REQUEST_CODE) {
             removeItemsFromArrays(selectedIndexRow);
             addItemToArrays(newItem, selectedIndexRow);
+            updateItemInSugarORM(selectedIndexRow, newItem);
         } else if (requestCode == NEW_ITEM_REQUEST_CODE) {
             addItemToArrays(newItem, todoItems.size());
+            persistItemToSugarORM(newItem);
         }
-        writeItems();
         updateListViewOfDataSourceChanges();
     }
 }
