@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -15,12 +14,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,10 +25,10 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<String> priorityLevels;
     ArrayList<String> dueDates;
     ArrayAdapter<String> aToDoAdapter;
-    ArrayAdapter<String> priorityAdapter;
+    TextColorArrayAdapter priorityAdapter;
     ArrayAdapter<String> dueDateAdapter;
     ListView lvItems;
-    ListView lvpriorityLevels;
+    ListView lvPriorityLevels;
     ListView lvDueDates;
     int selectedIndexRow;
     private final String ITEMS_OBJECT_ARRAY = "persistedItemsArray";
@@ -90,8 +83,8 @@ public class MainActivity extends AppCompatActivity {
                 navigateToEditActivity(EDITED_ITEM_REQUEST_CODE);
             }
         });
-        lvpriorityLevels = (ListView) findViewById(R.id.lvpriorityLevels);
-        lvpriorityLevels.setAdapter(priorityAdapter);
+        lvPriorityLevels = (ListView) findViewById(R.id.lvpriorityLevels);
+        lvPriorityLevels.setAdapter(priorityAdapter);
 
         lvDueDates = (ListView) findViewById(R.id.lvDueDates);
         lvDueDates.setAdapter(dueDateAdapter);
@@ -133,29 +126,8 @@ public class MainActivity extends AppCompatActivity {
     private void bindArraysToListViews() {
         aToDoAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, taskNames);
         dueDateAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, dueDates);
-        priorityAdapter = textColorChangingAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, priorityLevels) {
-            @Override
-            public View getView(int position, View convertView, ViewGroup parent) {
-                View cell = super.getView(position, convertView, parent);
-
-                TextView selectedPriority = (TextView) cell;
-
-                if (selectedPriority.getText().toString().equalsIgnoreCase("High")) {
-                    selectedPriority.setTextColor(Color.RED);
-                } else if (selectedPriority.getText().toString().equalsIgnoreCase("Medium")) {
-                    selectedPriority.setTextColor(Color.MAGENTA);
-                } else {
-                    selectedPriority.setTextColor(Color.BLACK);
-                }
-                return cell;
-            }
-        });
+        priorityAdapter = new TextColorArrayAdapter(this, android.R.layout.simple_list_item_1, priorityLevels);
     }
-
-    private ArrayAdapter<String>  textColorChangingAdapter(ArrayAdapter<String> arrayAdapter) {
-        return arrayAdapter;
-    }
-
 
     private void addItemToArrays(Item item, int index) {
         todoItems.add(index, item);
